@@ -1,19 +1,29 @@
 const questions = [
-    {
-        question: "Who delivered the Bhagavad Gita?",
-        options: ["Lord Krishna", "Valmiki", "Vyasa", "Tulsidas"],
-        answer: "Lord Krishna"
-    },
-    {
-        question: "Who wrote the Ramayana?",
-        options: ["Valmiki", "Vyasa", "Kalidasa", "Tulsidas"],
-        answer: "Valmiki"
-    },
-    {
-        question: "Who compiled the Vedas?",
-        options: ["Vyasa", "Valmiki", "Narada", "Vishwamitra"],
-        answer: "Vyasa"
-    }
+  {
+    question: "Who delivered the Bhagavad Gita?",
+    options: ["Lord Krishna", "Valmiki", "Vyasa", "Tulsidas"],
+    answer: "Lord Krishna"
+  },
+  {
+    question: "Who compiled the Vedas?",
+    options: ["Vyasa", "Valmiki", "Narada", "Vishwamitra"],
+    answer: "Vyasa"
+  },
+  {
+    question: "Which Purana describes Lord Krishna's life?",
+    options: ["Bhagavata Purana", "Shiva Purana", "Skanda Purana", "Markandeya Purana"],
+    answer: "Bhagavata Purana"
+  },
+  {
+    question: "Who wrote the Ramayana?",
+    options: ["Valmiki", "Vyasa", "Tulsidas", "Narada"],
+    answer: "Valmiki"
+  },
+  {
+    question: "What is the sacred river of India?",
+    options: ["Ganga", "Godavari", "Krishna", "Kaveri"],
+    answer: "Ganga"
+  }
 ];
 
 let currentQuestion = 0;
