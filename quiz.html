@@ -1,32 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sanātana Quiz</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-    
 <div class="container">
-<h1 id="title">Question 1</h1>
 
-<p id="question">Who delivered the Bhagavad Gita?</p>
+    <h1>🕉 SANĀTANA QUIZ</h1>
 
-<button id="option1">Lord Krishna</button><br><br>
+    <div class="progress-container">
+        <div id="progressBar"></div>
+    </div>
 
-<button id="option2">Valmiki</button><br><br>
+    <h3 id="questionNumber">Question 1 of 10</h3>
 
-<button id="option3">Vyasa</button><br><br>
+    <div class="timer">
+        ⏱ Time Left:
+        <span id="timer">20</span>s
+    </div>
 
-<button id="option4">Tulsidas</button>
+    <p id="question">
+        Question will appear here
+    </p>
 
-<p id="result"></p>
-<button id="nextBtn">Next</button>
-<button id="restartBtn" style="display:none;">
-    Play Again
-</button>
+    <button id="option1"></button>
+
+    <button id="option2"></button>
+
+    <button id="option3"></button>
+
+    <button id="option4"></button>
+
+    <p id="result"></p>
+
+    <button id="nextBtn">
+        Next →
+    </button>
+
+    <button id="restartBtn" style="display:none;">
+        🔄 Play Again
+    </button>
+
 </div>
+
 <script src="js/quiz.js"></script>
 
 </body>
