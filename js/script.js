@@ -9,19 +9,33 @@ startBtn.addEventListener("click", async () => {
         return;
     }
 
-    const response = await fetch("http://localhost:3000/save-user", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username })
-    });
+    try {
+        const response = await fetch("http://localhost:3000/save-user", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: username
+            })
+        });
 
-    const data = await response.json();
+        if (!response.ok) {
+            throw new Error("Server error");
+        }
 
-    console.log(data);
+        const data = await response.json();
+        console.log(data);
 
-    localStorage.setItem("username", username);
-    localStorage.setItem("userId",data.id);
-    window.location.href = "quiz.html";
+        // Save user details
+        localStorage.setItem("username", username);
+        localStorage.setItem("userId", data.id);
+
+        // Go to quiz page
+        window.location.href = "quiz.html";
+
+    } catch (err) {
+        console.error(err);
+        alert("Unable to connect to the server.");
+    }
 });

@@ -41,7 +41,7 @@ db.connect((err) => {
 
 app.post("/save-user", (req, res) => {
 
-    const { username } = req.body;
+    const { username,score } = req.body;
 
     const sql = "INSERT INTO users (username) VALUES (?)";
 

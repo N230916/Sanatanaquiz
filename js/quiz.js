@@ -52,11 +52,8 @@ const questions = [
     question: "Who lifted the Govardhan Hill?",
     options: ["Arjuna", "Lord Krishna", "Hanuman", "Indra"],
     answer: "Lord Krishna"
-}];
-
-// ============================
-// VARIABLES
-// ============================
+}
+];
 
 let currentQuestion = 0;
 let score = 0;
@@ -64,10 +61,6 @@ let timeLeft = 20;
 let timer;
 
 const username = localStorage.getItem("username");
-
-// ============================
-// HTML ELEMENTS
-// ============================
 
 const questionNumber = document.getElementById("questionNumber");
 const question = document.getElementById("question");
@@ -85,10 +78,6 @@ const restartBtn = document.getElementById("restartBtn");
 const progressBar = document.getElementById("progressBar");
 const timerDisplay = document.getElementById("timer");
 
-// ============================
-// LOAD QUESTION
-// ============================
-
 function loadQuestion() {
 
     clearInterval(timer);
@@ -96,76 +85,49 @@ function loadQuestion() {
     timeLeft = 20;
     timerDisplay.textContent = timeLeft;
 
-    timer = setInterval(function () {
+    timer = setInterval(() => {
 
         timeLeft--;
-
         timerDisplay.textContent = timeLeft;
 
         if (timeLeft <= 0) {
-
             clearInterval(timer);
             nextQuestion();
-
         }
 
     }, 1000);
 
     questionNumber.textContent =
-        "Question " + (currentQuestion + 1) +
-        " of " + questions.length;
+        `Question ${currentQuestion + 1} of ${questions.length}`;
 
     progressBar.style.width =
-        ((currentQuestion + 1) / questions.length) * 100 + "%";
+        `${((currentQuestion + 1) / questions.length) * 100}%`;
 
-    question.textContent =
-        questions[currentQuestion].question;
+    question.textContent = questions[currentQuestion].question;
 
-    option1.textContent =
-        questions[currentQuestion].options[0];
+    option1.textContent = questions[currentQuestion].options[0];
+    option2.textContent = questions[currentQuestion].options[1];
+    option3.textContent = questions[currentQuestion].options[2];
+    option4.textContent = questions[currentQuestion].options[3];
 
-    option2.textContent =
-        questions[currentQuestion].options[1];
+    result.innerHTML = "";
 
-    option3.textContent =
-        questions[currentQuestion].options[2];
-
-    option4.textContent =
-        questions[currentQuestion].options[3];
-
-    result.textContent = "";
-
-    option1.disabled = false;
-    option2.disabled = false;
-    option3.disabled = false;
-    option4.disabled = false;
-
-    option1.style.background = "#FFD700";
-    option2.style.background = "#FFD700";
-    option3.style.background = "#FFD700";
-    option4.style.background = "#FFD700";
+    [option1, option2, option3, option4].forEach(btn => {
+        btn.disabled = false;
+        btn.style.background = "#FFD700";
+    });
 }
-// ============================
-// DISABLE BUTTONS
-// ============================
 
 function disableButtons() {
-
     option1.disabled = true;
     option2.disabled = true;
     option3.disabled = true;
     option4.disabled = true;
-
 }
-
-// ============================
-// CHECK ANSWER
-// ============================
 
 function checkAnswer(selectedButton) {
 
     clearInterval(timer);
-
     disableButtons();
 
     if (selectedButton.textContent === questions[currentQuestion].answer) {
@@ -173,171 +135,84 @@ function checkAnswer(selectedButton) {
         selectedButton.style.background = "#28a745";
         result.innerHTML = "✅ Correct Answer!";
         score++;
-        console.log("Score:",score);
 
     } else {
 
         selectedButton.style.background = "#dc3545";
-        result.innerHTML =
-            "❌ Correct Answer: <b>" +
-            questions[currentQuestion].answer +
-            "</b>";
+        result.innerHTML = `❌ Correct Answer: <b>${questions[currentQuestion].answer}</b>`;
 
-        if (option1.textContent === questions[currentQuestion].answer)
-            option1.style.background = "#28a745";
-
-        if (option2.textContent === questions[currentQuestion].answer)
-            option2.style.background = "#28a745";
-
-        if (option3.textContent === questions[currentQuestion].answer)
-            option3.style.background = "#28a745";
-
-        if (option4.textContent === questions[currentQuestion].answer)
-            option4.style.background = "#28a745";
+        [option1, option2, option3, option4].forEach(btn => {
+            if (btn.textContent === questions[currentQuestion].answer) {
+                btn.style.background = "#28a745";
+            }
+        });
     }
-
 }
 
-// ============================
-// OPTION BUTTON EVENTS
-// ============================
-
-option1.onclick = function () {
-    checkAnswer(option1);
-};
-
-option2.onclick = function () {
-    checkAnswer(option2);
-};
-
-option3.onclick = function () {
-    checkAnswer(option3);
-};
-
-option4.onclick = function () {
-    checkAnswer(option4);
-};
-
-// ============================
-// NEXT QUESTION
-// ============================
+option1.onclick = () => checkAnswer(option1);
+option2.onclick = () => checkAnswer(option2);
+option3.onclick = () => checkAnswer(option3);
+option4.onclick = () => checkAnswer(option4);
 
 function nextQuestion() {
 
     currentQuestion++;
 
     if (currentQuestion < questions.length) {
-
         loadQuestion();
-
     } else {
-
         finishQuiz();
-
     }
-
 }
 
-// ============================
-// NEXT BUTTON
-// ============================
-
-nextBtn.onclick = function () {
-
-    nextQuestion();
-
-};
-// ============================
-// FINISH QUIZ
-// ============================
+nextBtn.onclick = nextQuestion;
 
 async function finishQuiz() {
 
     clearInterval(timer);
 
-    const username = localStorage.getItem("username");
+    const userId = localStorage.getItem("userId");
 
-    // Save Score to MySQL
     try {
 
-        await fetch("http://localhost:3000/save-score", {
-
-            method: "POST",
-
+        await fetch("http://localhost:3000/update-score", {
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
-
             body: JSON.stringify({
-                username: username,
+                id: userId,
                 score: score
             })
-
         });
 
-    } catch (error) {
-
-        console.log("Error Saving Score:", error);
-
+    } catch (err) {
+        console.log(err);
     }
 
-    // Calculate Percentage
     let percentage = Math.round((score / questions.length) * 100);
 
-    // Badge
-    let badge = "";
+    let badge = percentage >= 90 ? "🥇 Dharma Scholar"
+        : percentage >= 75 ? "🥈 Veda Explorer"
+        : percentage >= 50 ? "🥉 Sanātana Learner"
+        : "📖 Keep Practicing";
 
-    if (percentage >= 90) {
-
-        badge = "🥇 Dharma Scholar";
-
-    } else if (percentage >= 75) {
-
-        badge = "🥈 Veda Explorer";
-
-    } else if (percentage >= 50) {
-
-        badge = "🥉 Sanātana Learner";
-
-    } else {
-
-        badge = "📖 Keep Practicing";
-
-    }
-
-    // Motivational Message
-    let message = "";
-
-    if (percentage >= 90) {
-
-        message = "Outstanding! You have excellent knowledge of Sanātana Dharma.";
-
-    } else if (percentage >= 75) {
-
-        message = "Very Good! Keep exploring our sacred scriptures.";
-
-    } else if (percentage >= 50) {
-
-        message = "Good effort! Practice a little more.";
-
-    } else {
-
-        message = "Don't worry. Every great journey starts with learning.";
-    }
+    let message = percentage >= 90
+        ? "Outstanding! You have excellent knowledge of Sanātana Dharma."
+        : percentage >= 75
+        ? "Very Good! Keep exploring our sacred scriptures."
+        : percentage >= 50
+        ? "Good effort! Practice a little more."
+        : "Don't worry. Every great journey starts with learning.";
 
     questionNumber.innerHTML = "🎉 Quiz Completed";
 
     question.innerHTML = `
         <h2>Congratulations ${username}! 🎊</h2>
-
         <h3>Your Score</h3>
-
-        <h1>${score} / ${questions.length}</h1>
-
+        <h1>${score}/${questions.length}</h1>
         <h3>${percentage}%</h3>
-
         <p>${badge}</p>
-
         <p>${message}</p>
     `;
 
@@ -347,49 +222,28 @@ async function finishQuiz() {
     option4.style.display = "none";
 
     nextBtn.style.display = "none";
-
     restartBtn.style.display = "inline-block";
 
     result.innerHTML = "";
 }
-// ============================
-// RESTART QUIZ
-// ============================
 
 restartBtn.onclick = function () {
-
     localStorage.removeItem("username");
-
+    localStorage.removeItem("userId");
     location.href = "index.html";
-
 };
-
-// ============================
-// LEADERBOARD
-// ============================
 
 async function loadLeaderboard() {
 
     try {
 
         const response = await fetch("http://localhost:3000/leaderboard");
-
         const data = await response.json();
-
-        console.log("Leaderboard");
-
         console.table(data);
 
-    } catch (error) {
-
-        console.log("Leaderboard Error");
-
+    } catch (err) {
+        console.log(err);
     }
-
 }
-
-// ============================
-// START QUIZ
-// ============================
 
 loadQuestion();
